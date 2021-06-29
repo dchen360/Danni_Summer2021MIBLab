@@ -100,8 +100,10 @@ class ImageDataset(Dataset):
         ## WSI Name ##
         ID = image_row['ID']
         ## Image name and location/path ##
-        image_name = image_row['Patch_name']
-        image_path = os.path.join(self.root, str(label), image_name )
+#         image_name = image_row['Patch_name']
+#         image_path = os.path.join(self.root, str(label), image_name )
+        
+        return item
         
         ## Load image into numpy array with PIL ##
 #        image = PIL.Image.open(image_path)
@@ -131,4 +133,4 @@ class ImageDataset(Dataset):
 #             ## Item to return ##
 #             item = {'image': image, 'label': label, 'ID':ID}
         
-        return item
+
