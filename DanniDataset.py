@@ -2,7 +2,7 @@
 # Danni Chen
 # 6/27/2021
 # Modified from: https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
-# Modified from Felipe's
+# Modified from Felipe's Dataset
 
 # import torch
 from torch.utils.data import Dataset
@@ -16,18 +16,44 @@ import pandas as pd
 # from .FocusMetric import FocusMetric
 # from .GreyMetric import GreyMetric
 
-class ImageDataset(Dataset):
-    def __init__(self, imageData, root):
+class DanniDataset(Dataset):
+    def __init__(self, imageData, image_dir, transform = None):
 
-        ## Check if Root Exists ##
-        if( not os.path.isdir(root) ):
-            exit('ImageDataset: Root Does NOT Exist')
-
+        ## Check if image_dir Exists ##
+        if( not os.path.isdir(image_dir) ):
+            exit('ImageDataset: The directory of the Image Does NOT Exist')
+        
+        self.image_dir = image_dir
+        self.imageData = imageData
+        self.transform = transform
+        
         ## Load metadata (path_to_csv or dataframe) ##
-        if (type(imageData) == pd.core.frame.DataFrame):
-            imageData_df = imageData.copy()
-        else:
-            imageData_df = pd.read_csv(imageData)
+#         if (type(imageData) == pd.core.frame.DataFrame):
+#             imageData_df = imageData.copy()
+#         else:
+#             imageData_df = pd.read_csv(imageData)
+            
+    def __len__(self):
+        ## Number of rows of imageData dataframe ##
+        return len(self.imageData)
+
+    def __getitem__(self, idx):
+        ## imageData Row:idx ## 
+        image_row = self.imageData.iloc[idx]
+        ## Image Label (path) ##
+        label = image_row['Label'] 
+        ## WSI Name ##
+        ID = image_row['ID']
+        ## Image name and location/path ##
+#         image_name = image_row['Patch_name']
+#         image_path = os.path.join(self.root, str(label), image_name )
+        
+        return item
+    
+    from torch.utils.data import DataLoader
+
+    train_dataloader = DataLoader(training_data, batch_size=64, shuffle=True)
+    test_dataloader = DataLoader(test_data, batch_size=64, shuffle=True)
 
         ## Print Original Shape ##
 #        print('Metadata Shape: %s'% (metadata_df.shape,) )
@@ -87,23 +113,6 @@ class ImageDataset(Dataset):
         ## Augment image_2 (target) ##
 #         self.augment_target = augment_target
         
-
-    def __len__(self):
-        ## Number of rows of imageData dataframe ##
-        return len(self.imageData)
-
-    def __getitem__(self, idx):
-        ## imageData Row:idx ## 
-        image_row = self.imageData.iloc[idx]
-        ## Image Label (path) ##
-        label = image_row['Label'] 
-        ## WSI Name ##
-        ID = image_row['ID']
-        ## Image name and location/path ##
-#         image_name = image_row['Patch_name']
-#         image_path = os.path.join(self.root, str(label), image_name )
-        
-        return item
         
         ## Load image into numpy array with PIL ##
 #        image = PIL.Image.open(image_path)
