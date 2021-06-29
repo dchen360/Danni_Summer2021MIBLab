@@ -15,16 +15,17 @@ import pandas as pd
 ## QC Metrics ##
 # from .FocusMetric import FocusMetric
 # from .GreyMetric import GreyMetric
+from torchvision.io import read_image
 
 class DanniDataset(Dataset):
-    def __init__(self, imageData, image_dir, transform = None):
+    def __init__(self, imageDataFile, image_dir, transform = None):
 
         ## Check if image_dir Exists ##
         if( not os.path.isdir(image_dir) ):
             exit('ImageDataset: The directory of the Image Does NOT Exist')
         
         self.image_dir = image_dir
-        self.imageData = imageData
+        self.imageData = imageDataFile
         self.transform = transform
         
         ## Load metadata (path_to_csv or dataframe) ##
@@ -35,25 +36,26 @@ class DanniDataset(Dataset):
             
     def __len__(self):
         ## Number of rows of imageData dataframe ##
-        return len(self.imageData)
+        return len(self.imageDataFile)
 
     def __getitem__(self, idx):
         ## imageData Row:idx ## 
-        image_row = self.imageData.iloc[idx]
-        ## Image Label (path) ##
-        label = image_row['Label'] 
-        ## WSI Name ##
-        ID = image_row['ID']
+#         image_row = self.imageData.iloc[idx]
+#         ## Image Label (path) ##
+#         label = image_row['Label'] 
+#         ## WSI Name ##
+#         ID = image_row['ID']
         ## Image name and location/path ##
 #         image_name = image_row['Patch_name']
 #         image_path = os.path.join(self.root, str(label), image_name )
-        
-        return item
-    
-    from torch.utils.data import DataLoader
+#         image = self.toTensor(image)
 
-    train_dataloader = DataLoader(training_data, batch_size=64, shuffle=True)
-    test_dataloader = DataLoader(test_data, batch_size=64, shuffle=True)
+        img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 0])
+        image = read_image(img_path)
+        label = self.img_labels.iloc[idx, 1]
+        item = {'image': image, 'label': label}
+    
+        return item
 
         ## Print Original Shape ##
 #        print('Metadata Shape: %s'% (metadata_df.shape,) )
