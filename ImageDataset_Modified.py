@@ -37,26 +37,58 @@ class ImageDataset(Dataset):
         print('Number of WSIs (Original): %s'%(np.unique( np.array(metadata_df['ID']) ).shape,) )
 
         ## Ignore QC Failed Patches ##
-        failed_Focus= metadata_df['F_Focus'] < focus_threshold
-        failed_Grey = metadata_df['F_Grey']  > grey_threshold
-        ignore_rows = (failed_Grey | failed_Focus)
-        metadata_df.loc[ignore_rows, 'Label'] = 'Ignore'
-        ## Remove Label = 'Ignore' ##
-        metadata_df = metadata_df[metadata_df['Label'] != 'Ignore']
-        print('Filtered Shape (QC): %s'% (metadata_df.shape,) )
+#         failed_Focus= metadata_df['F_Focus'] < focus_threshold
+#         failed_Grey = metadata_df['F_Grey']  > grey_threshold
+#         ignore_rows = (failed_Grey | failed_Focus)
+#         metadata_df.loc[ignore_rows, 'Label'] = 'Ignore'
+#         ## Remove Label = 'Ignore' ##
+#         metadata_df = metadata_df[metadata_df['Label'] != 'Ignore']
+#         print('Filtered Shape (QC): %s'% (metadata_df.shape,) )
 
         ## Ignore WSI with less than nTilesThresh tiles ##
-        WSI_nTiles= metadata_df.groupby('ID')['Patch_name'].count()
-        ## List of WSIs not meeting threshold ##
-        ignore_list = WSI_nTiles < nTilesThresh
-        ignore_list= list( ignore_list[ ignore_list ].index )
-        ignore_rows = [ WSI_id in ignore_list for WSI_id in metadata_df['ID'] ] 
-        metadata_df.loc[ignore_rows, 'Label'] = 'Ignore'
-        ## Remove Label = 'Ignore' ##
-        metadata_df = metadata_df[metadata_df['Label'] != 'Ignore']
-        print('Filtered Shape (nTilesThresh): %s'% (metadata_df.shape,) )
-        ## Number of WSI Represented ##
-        print('Number of WSIs (Final): %s'%(np.unique( np.array(metadata_df['ID']) ).shape,) )
+#         WSI_nTiles= metadata_df.groupby('ID')['Patch_name'].count()
+#         ## List of WSIs not meeting threshold ##
+#         ignore_list = WSI_nTiles < nTilesThresh
+#         ignore_list= list( ignore_list[ ignore_list ].index )
+#         ignore_rows = [ WSI_id in ignore_list for WSI_id in metadata_df['ID'] ] 
+#         metadata_df.loc[ignore_rows, 'Label'] = 'Ignore'
+#         ## Remove Label = 'Ignore' ##
+#         metadata_df = metadata_df[metadata_df['Label'] != 'Ignore']
+#         print('Filtered Shape (nTilesThresh): %s'% (metadata_df.shape,) )
+#         ## Number of WSI Represented ##
+#         print('Number of WSIs (Final): %s'%(np.unique( np.array(metadata_df['ID']) ).shape,) )
+        
+        
+        ## Color Augmentation ##
+#         self.augment_color = transforms.ColorJitter(brightness=0.1, contrast=0.3, saturation=1., hue=0.5) # V18: Superset
+#         self.augment_color = transforms.ColorJitter(brightness=0.1, contrast=0.3, saturation=0.5, hue=0.05) # V17: Natural
+#         self.augment_color = transforms.ColorJitter(brightness=0.1, contrast=0.3, saturation=1., hue=0.5) # V16: Superset
+#         self.augment_color = transforms.ColorJitter(brightness=0.1, contrast=0.3, saturation=0.5, hue=0.05) # V13-V15: Natural
+#         self.augment_color = transforms.ColorJitter(brightness=0.1, contrast=0.3, saturation=0.5, hue=0.0) # V10-12
+#         self.augment_color = transforms.ColorJitter(brightness=0.2, contrast=0.5, saturation=0.5, hue=0.3)
+#         self.augment_color = transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0.4)
+        
+        ## Flip Augmentation ##
+#         augment_flips = [ transforms.RandomVerticalFlip(p=0.5), transforms.RandomHorizontalFlip(p=0.5) ]
+        ## Apply list of tranformation functions ##
+#         self.transforms_flips = transforms.Compose([
+#             *augment_flips, # PIL
+#         ])
+        ## PIL to Tensor ##
+#         self.toTensor = transforms.ToTensor()
+        
+        ## Augment Boolean ##
+#         self.augment = augment
+        ## Metadata attribute ##
+#         self.metadata = metadata_df
+        ## Image Directory ##
+#         self.root = root
+        ## QC Thresholds ##
+#         self.focus_threshold = focus_threshold
+#         self.grey_threshold = grey_threshold
+        ## Augment image_2 (target) ##
+#         self.augment_target = augment_target
+        
 
     def __len__(self):
         ## Number of rows of metadata dataframe ##
