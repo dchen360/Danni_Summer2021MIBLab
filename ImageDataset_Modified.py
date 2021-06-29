@@ -8,31 +8,29 @@
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 # from skimage import io
-import PIL.Image
+# import PIL.Image
 import os, re
 import numpy as np
 import pandas as pd
 ## QC Metrics ##
-##from .FocusMetric import FocusMetric
-##from .GreyMetric import GreyMetric
+# from .FocusMetric import FocusMetric
+# from .GreyMetric import GreyMetric
 
 class ImageDataset(Dataset):
-    def __init__(self, metadata, root, 
-                 focus_threshold=2500, grey_threshold=1000, nTilesThresh=20, 
-                 augment=False, augment_target=False):
+    def __init__(self, imageData, root):
 
         ## Check if Root Exists ##
         if( not os.path.isdir(root) ):
             exit('ImageDataset: Root Does NOT Exist')
 
         ## Load metadata (path_to_csv or dataframe) ##
-        if (type(metadata) == pd.core.frame.DataFrame):
-            metadata_df = metadata.copy()
+        if (type(imageData) == pd.core.frame.DataFrame):
+            imageData_df = imageData.copy()
         else:
-            metadata_df = pd.read_csv(metadata)
+            imageData_df = pd.read_csv(imageData)
 
         ## Print Original Shape ##
-        print('Metadata Shape: %s'% (metadata_df.shape,) )
+#        print('Metadata Shape: %s'% (metadata_df.shape,) )
         ## Number of WSI Represented ##
 #        print('Number of WSIs (Original): %s'%(np.unique( np.array(metadata_df['ID']) ).shape,) )
 
@@ -91,12 +89,12 @@ class ImageDataset(Dataset):
         
 
     def __len__(self):
-        ## Number of rows of metadata dataframe ##
-        return len(self.metadata)
+        ## Number of rows of imageData dataframe ##
+        return len(self.imageData)
 
     def __getitem__(self, idx):
-        ## Metadata Row:idx ## 
-        image_row = self.metadata.iloc[idx]
+        ## imageData Row:idx ## 
+        image_row = self.imageData.iloc[idx]
         ## Image Label (path) ##
         label = image_row['Label'] 
         ## WSI Name ##
@@ -106,7 +104,7 @@ class ImageDataset(Dataset):
         image_path = os.path.join(self.root, str(label), image_name )
         
         ## Load image into numpy array with PIL ##
-        image = PIL.Image.open(image_path)
+#        image = PIL.Image.open(image_path)
         
 #         ## Apply Transformations ##
 #         if(self.augment):
