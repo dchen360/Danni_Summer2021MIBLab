@@ -13,8 +13,8 @@ import os, re
 import numpy as np
 import pandas as pd
 ## QC Metrics ##
-from .FocusMetric import FocusMetric
-from .GreyMetric import GreyMetric
+##from .FocusMetric import FocusMetric
+##from .GreyMetric import GreyMetric
 
 class ImageDataset(Dataset):
     def __init__(self, metadata, root, 
@@ -34,7 +34,7 @@ class ImageDataset(Dataset):
         ## Print Original Shape ##
         print('Metadata Shape: %s'% (metadata_df.shape,) )
         ## Number of WSI Represented ##
-        print('Number of WSIs (Original): %s'%(np.unique( np.array(metadata_df['ID']) ).shape,) )
+#        print('Number of WSIs (Original): %s'%(np.unique( np.array(metadata_df['ID']) ).shape,) )
 
         ## Ignore QC Failed Patches ##
 #         failed_Focus= metadata_df['F_Focus'] < focus_threshold
@@ -108,29 +108,29 @@ class ImageDataset(Dataset):
         ## Load image into numpy array with PIL ##
         image = PIL.Image.open(image_path)
         
-        ## Apply Transformations ##
-        if(self.augment):
-            ### Apply transforms to Image ###
-            ## Apply: Flips ##
-            image = self.transforms_flips(image)
-            ## Second Image ##
-            image_2 = image.copy()
-            ## Apply: Hue Shifts ##
-            image   = self.augment_color( image )
-            ## Augment image_2 (target) ##
-            if(self.augment_target):
-                image_2 = self.augment_color( image_2 )
-            ## Apply: Tensor ##
-            image   = self.toTensor(image)
-            image_2 = self.toTensor(image_2)
+#         ## Apply Transformations ##
+#         if(self.augment):
+#             ### Apply transforms to Image ###
+#             ## Apply: Flips ##
+#             image = self.transforms_flips(image)
+#             ## Second Image ##
+#             image_2 = image.copy()
+#             ## Apply: Hue Shifts ##
+#             image   = self.augment_color( image )
+#             ## Augment image_2 (target) ##
+#             if(self.augment_target):
+#                 image_2 = self.augment_color( image_2 )
+#             ## Apply: Tensor ##
+#             image   = self.toTensor(image)
+#             image_2 = self.toTensor(image_2)
         
-            ## Item to return ##
-            item = {'image': image, 'label': label, 'ID':ID, 'image_2':image_2}
+#             ## Item to return ##
+#             item = {'image': image, 'label': label, 'ID':ID, 'image_2':image_2}
             
-        else: # No Augment
-            ## Apply: Tensor ##
-            image = self.toTensor(image)
-            ## Item to return ##
-            item = {'image': image, 'label': label, 'ID':ID}
+#         else: # No Augment
+#             ## Apply: Tensor ##
+#             image = self.toTensor(image)
+#             ## Item to return ##
+#             item = {'image': image, 'label': label, 'ID':ID}
         
         return item
