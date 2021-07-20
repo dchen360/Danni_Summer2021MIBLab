@@ -4,7 +4,6 @@
 # Modified from: https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # Modified from Felipe's Dataset
 
-# import torch
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 import os, re
@@ -56,8 +55,14 @@ class DanniDataset(Dataset):
     def __getitem__(self, idx):
         ## imageData Row:idx ## 
         image_row = self.imageData_df.iloc[idx]
+        
         ## Image label ##
         label = image_row['Label']
+        if label == '0':
+            label = 'paper'
+        else:
+            label = 'metal'
+            
         ## Image name(relative_path) ##
         relative_path = image_row['Relative_path']
         
