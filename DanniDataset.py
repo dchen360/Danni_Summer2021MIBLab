@@ -22,15 +22,13 @@ class DanniDataset(Dataset):
         self.imageData_df = imageData_df
         self.image_dir = image_dir
         
-        ## Each dataframe stores location of the image relative to image directory and 
-        ## Image directory: C:\Users\danni\OneDrive\Mini Project\Garbage Classification Dataset\MetalPaper_Test
+        ## Each dataframe stores location of the image relative to image directory and the label of the image
+        ## image_dir: r'C:\Users\danni\OneDrive\Mini Project\Garbage Classification Dataset\MetalPaper_Train'
         ## Relative path: metal\metal1.png
+        ## Image label (0:paper and 1:metal)
         ## For relative path, can remove anything in front of metal, relative path is the speficif image from the point of view of the image directory
         
-        ## need to create a dataframe and save it as CSV, do it with pandas
-        ## dataframe has relative path and the image label (0:paper or 1:metal)
-        ## root_dir = r'C:\Users\danni\OneDrive\Mini Project\Garbage Classification Dataset\MetalPaper_Train'
-        
+        ## Creating a dictionary that has two keys: 'Relative_path' and 'Label' with two lists being the values
         data_info = {}
         rel_file_list = []
         label_list = []
@@ -46,8 +44,8 @@ class DanniDataset(Dataset):
                 else:
                     label = '1'
                 label_list.append(label)
-         data_info['relative_path'] = rel_file_list
-         data_info['label'] = label_list
+         data_info['Relative_path'] = rel_file_list
+         data_info['Label'] = label_list
 
          imageData_df = pd.DataFrame(data_info)
             
@@ -57,12 +55,13 @@ class DanniDataset(Dataset):
 
     def __getitem__(self, idx):
         ## imageData Row:idx ## 
-#         image_row = self.imageData.iloc[idx]
-#         ## Image Label (path) ##
-#         label = image_row['Label'] 
-
-        ## Image name and location/path ##
-        image_path = os.path.join(self.root, str(label), image_name )
+        image_row = self.imageData_df.iloc[idx]
+        ## Image label ##
+        label = image_row['Label']
+        ## Image name(relative_path) ##
+        relative_path = image_row['Relative_path']
+        
+        image_path = os.path.join(self.image_dir, str(relative_path))
         image = read_image(image_path)
         ## see what read_image returns (if it is a tensor)
         image = self.toTensor(image)
