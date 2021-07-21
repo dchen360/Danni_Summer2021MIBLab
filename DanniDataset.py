@@ -12,13 +12,13 @@ import pandas as pd
 from torchvision.io import read_image
 
 class DanniDataset(Dataset):
-    def __init__(self, imageData_df, image_dir, transform = None):
+    def __init__(self, metadata_df, image_dir, transform = None):
 
         ## Check if image_dir Exists ##
         if( not os.path.isdir(image_dir) ):
             exit('ImageDataset: The directory of the Image Does NOT Exist')
         
-        self.imageData_df = imageData_df
+        self.metadata_df = metadata_df
         self.image_dir = image_dir
         
         ## Each dataframe stores location of the image relative to image directory and the label of the image
@@ -47,15 +47,15 @@ class DanniDataset(Dataset):
          data_info['Relative_path'] = rel_file_list
          data_info['Label'] = label_list
 
-         imageData_df = pd.DataFrame(data_info)
+         metadata_df = pd.DataFrame(data_info)
             
     def __len__(self):
         ## Number of rows of imageData dataframe ##
-        return len(self.imageData_df)
+        return len(self.metadata_df)
 
     def __getitem__(self, idx):
         ## imageData Row:idx ## 
-        image_row = self.imageData_df.iloc[idx]
+        image_row = self.metadata_df.iloc[idx]
         
         ## Image label ##
         label = image_row['Label']
