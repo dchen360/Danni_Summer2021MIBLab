@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from torchvision.io import read_image
 
+## Before inputting the metadata_df, the training or testing is seperated. ##
 class DanniDataset(Dataset):
     def __init__(self, metadata_df, image_dir, transform = None):
 
@@ -23,11 +24,16 @@ class DanniDataset(Dataset):
         
         ## Each dataframe stores location of the image relative to image directory and the label of the image
         ## image_dir: r'C:\Users\danni\OneDrive\Mini Project\Garbage Classification Dataset\MetalPaper_Train'
+        
+        ## To dos:
+        ## ! image_dir should be able to see all images ##
+        ## one more col in metadata_df, if training ##
+        ## !! Be in another separate jupyter notebook named Create_Metadata, saving as a csv
+        
         ## Relative path: metal\metal1.png
         ## Image label (0:paper and 1:metal)
         ## For relative path, can remove anything in front of metal, relative path is the speficif image from the point of view of the image directory
         
-        ## Be in another separate jupyter notebook named Create_Metadata, saving as a csv
         ## Creating a dictionary that has two keys: 'Relative_path' and 'Label' with two lists being the values
         data_info = {}
         rel_file_list = []
