@@ -6,7 +6,11 @@ from torch.utils.data import DataLoader
 
 from DanniDataset import DanniDataset
 
-## What to put for the parameters? The image directory? ##
+## User_defined variables (anything i need to type out/hyperparameters): image dir, the location of the csv file, batch size, learning rate
+
+## What to put for the parameters? The image directory, the metadata_df, and wether it transform (an object)? ##
+## there would be two metadata_df, so two image_datasets ##
+## train_dataset and test_dataset ##
 image_dataset = DanniDataset(parameters)
 
 ## Customized dataset is for retrieving the data using data loader ##
@@ -15,7 +19,11 @@ image_dataset = DanniDataset(parameters)
 ## Such a dataset, implements the __getitem__() and __len__() protocols. ##
 ## When accessed with dataset[idx], could read the idx-th image and its corresponding label from a folder on the disk. ##
 
-## Do I need to get different image_dataset for train_image_loader and test_image_loader? ##
+## Do I need to get different image_dataset for train_loader and test_loader? ##
+## train_loader and test_loader ##
+## test_loader, shuffle = False ##
+## the order of the images that the model see should be random, or the model can memorize the pattern. ##
+## for testing, the order does not matter becuase the parameter is not being updated. ##
 image_loader = torch.utils.data.DataLoader(
     image_dataset, batch_size=batch_size,
     pin_memory=True,
@@ -36,27 +44,6 @@ plt.show()
 
 ## Start constructing the covolution layer as image_loader works properly ##
 ## Build the CNN classification model. ##
-## Why using 'relu' as the activation function?? How to optimize the hyper-parameters for the model??
 
-model = Sequential([
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu', input_shape=(300, 300, 3)),
-    MaxPooling2D(pool_size=2),
+## Create another jupyter notebook following the instruction of https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html ##
 
-    Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
-    
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
-    
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
-
-    Flatten(),
-
-    Dense(64, activation='relu'),
-
-    Dense(6, activation='softmax')
-])
-
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
-model.fit(train_generator, epochs=100, steps_per_epoch=2276//32,validation_data=validation_generator, validation_steps=251//32)
