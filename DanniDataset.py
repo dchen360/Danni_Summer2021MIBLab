@@ -27,6 +27,7 @@ class DanniDataset(Dataset):
         ## Image label (0:paper and 1:metal)
         ## For relative path, can remove anything in front of metal, relative path is the speficif image from the point of view of the image directory
         
+        ## Be in another separate jupyter notebook named Create_Metadata, saving as a csv
         ## Creating a dictionary that has two keys: 'Relative_path' and 'Label' with two lists being the values
         data_info = {}
         rel_file_list = []
@@ -40,7 +41,7 @@ class DanniDataset(Dataset):
                 label = rel_file[0:5]
                 if label == 'paper':
                     label = '0'
-                else:
+                elif label == 'metal':
                     label = '1'
                 label_list.append(label)
          data_info['Relative_path'] = rel_file_list
