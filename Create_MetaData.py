@@ -46,5 +46,5 @@ def create_metadata(image_dir):
                                 data_info['Train'] = if_train
 
         metadata_df = pd.DataFrame(data_info)
-        metadata_df.to_csv(root_dir + '\metadata.csv')
+        metadata_df.to_csv(image_dir + '\metadata.csv')
         return metadata_df
